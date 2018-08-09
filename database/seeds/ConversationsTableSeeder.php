@@ -24,6 +24,14 @@ class ConversationsTableSeeder extends Seeder
         ]);
 
         Conversation::create ([
+            'user_id' => 1,
+            'contact_id' => 3,
+
+            'last_message' => null,
+            'last_time' => null,
+        ]);
+
+        Conversation::create ([
             'user_id' => 2,
             'contact_id' => 1,
 

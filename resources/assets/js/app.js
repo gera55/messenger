@@ -2,14 +2,11 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-
-
-
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 
-
-
+Vue.component('message-conversation-component', 
+	require('./components/MessageConversationComponent.vue'));
 Vue.component('contact-component', 
 	require('./components/ContactComponent.vue'));
 Vue.component('contact-list-component', 
@@ -20,8 +17,8 @@ Vue.component('active-conversation-component',
 const app = new Vue({
     el: '#app',
     methods: {
-    	logout() {
-    		document.getElementById('logout-form').submit();
-    	}
+        logout() {
+            document.getElementById('logout-form').submit();
+        }
     }
 });
