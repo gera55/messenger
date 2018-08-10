@@ -5,8 +5,7 @@
             footer-bg-variant="light"
             footer-border-variant="dark"
             title="Conversación activa"
-            class="h-100">
-                
+            class="h-100">                
                 <message-conversation-component v-for="message in messages"
                     :key="message.id"
                     :written-by-me="message.written_by_me">
@@ -22,7 +21,6 @@
                                 v-model="newMessage"
                                 placeholder="Escribe un mensaje...">
                             </b-form-input>
-
                             <b-input-group-append>
                                 <b-button type="submit" variant="primary">Enviar</b-button>
                             </b-input-group-append>
@@ -34,7 +32,7 @@
         </b-col>
         <b-col cols="4">
             <b-img rounded="circle" blank width="60" height="60" blank-color="#777" alt="img" class="m-1" />
-            <p>Usuario Seleccionado</p>
+            <p>{{ contactName }}</p>
             <hr>
             <b-form-checkbox>
                 Desactivar notificaciones
@@ -45,24 +43,19 @@
 
 <script>
     export default {
+        props: {
+            contactId: Number,
+            contactName: String,
+            messages: Array
+        },
     	data() {
     		return {
-                messages: [],
-                newMessage: '',
-                contactId: 2
+                newMessage: ''
     		};
     	},
         mounted() {
-            this.getMessages();
         },
-        methods: {
-            getMessages() {
-                axios.get(`api/messages?contact_id=${this.contactId}`)
-                .then((response) => {
-                    // console.log(response.data);
-                    this.messages = response.data;
-                });
-            },
+        methods: {            
             postMessage() {
                 const params = {
                     to_id: this.contactId,

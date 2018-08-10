@@ -11,7 +11,8 @@
             <contact-component 
                 v-for="conversation in conversations"
                 :key="conversation.id"
-                :conversation="conversation">
+                :conversation="conversation"
+                @click.native="selectConversation(conversation)">
             </contact-component>
             <!--
             <contact-component variant="dark">
@@ -41,6 +42,10 @@
                 .then((response) => {
                     this.conversations = response.data;
                 });
+            },
+            selectConversation(conversation) {
+                //console.log(conversation);
+                this.$emit('conversationSelected', conversation);
             }
         }
     }
