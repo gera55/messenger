@@ -36,8 +36,12 @@ import Echo from 'laravel-echo'
 window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
+	authEndpoint: 'broadcasting/auth',
     broadcaster: 'pusher',
     key: 'd84c022c4d26cefe5411',
     cluster: 'us2',
     encrypted: true
 });
+
+// Date & Time format
+window.moment = require('moment');

@@ -17,6 +17,8 @@ class ConversationController extends Controller
 			'last_message',
 			'last_time'
     	]);
-			//contact_name
+
+		// contact_name
+    	// contact_image
     }
 }
