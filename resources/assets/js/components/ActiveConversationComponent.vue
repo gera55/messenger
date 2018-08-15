@@ -59,8 +59,7 @@
             contactId: Number,
             contactName: String,
             contactImage: String,
-            myImage: String,
-            messages: Array
+            myImage: String
         },
     	data() {
     		return {
@@ -68,6 +67,7 @@
     		};
     	},
         mounted() {
+            
         },
         methods: {            
             postMessage() {
@@ -88,6 +88,11 @@
             scrollToBottom() {
                 const el = document.querySelector('.card-body-scroll');
                 el.scrollTop = el.scrollHeight;
+            }
+        },
+        computed: {
+            messages() {
+                return this.$store.state.messages;
             }
         },
         updated() {

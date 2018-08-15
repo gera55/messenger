@@ -2,19 +2,8 @@
     <b-container fluid style="height: calc(100vh - 56px);">
         <b-row no-gutters>
             <b-col cols="4">
-
-                <b-form class="my-3 mx-2">
-                    <b-form-input class="text-center"
-                        type="text"
-                        v-model="querySearch"
-                        placeholder="Buscar contacto...">
-                    </b-form-input>
-                </b-form>
-
-                <contact-list-component 
-                @conversationSelected="changeActiveConversation($event)"
-                :conversations="conversationsFiltered">
-                </contact-list-component>
+                <contact-form-component />
+                <contact-list-component />                
             </b-col>
             <b-col cols="8">            
                 <active-conversation-component
@@ -23,10 +12,7 @@
                     :contact-name="selectedConversation.contact_name"
                     :contact-image="selectedConversation.contact_image"
                     :my-image="myImageUrl"
-                    :messages="messages"
-                    @messageCreated="addMessage($event)">
-
-                </active-conversation-component>
+                    @messageCreated="addMessage($event)" />
             </b-col>
         </b-row>
     </b-container>
@@ -37,16 +23,8 @@
         props: {
             user: Object
         },
-        data() {
-            return {
-                selectedConversation: null,
-                messages: [],
-                conversations: [],
-                querySearch: ''
-            };
-        },
         mounted() {
-            this.getConversations();
+            this.$store.dispatch('getConversations');
 
             Echo.private(`users.${this.user.id}`)
             .listen('MessageSent', (data) => {
@@ -67,18 +45,6 @@
             );
         },
         methods: {
-            changeActiveConversation(conversation) {
-                //console.log('Nueva conversación seleccionada', conversation);
-                this.selectedConversation = conversation;
-                this.getMessages();
-            },
-            getMessages() {
-                axios.get(`api/messages?contact_id=${this.selectedConversation.contact_id}`)
-                .then((response) => {
-                    // console.log(response.data);
-                    this.messages = response.data;
-                });
-            },
             addMessage(message) {
                 const conversation = this.conversations.find((conversation) => {
                     return conversation.contact_id == message.from_id || conversation.contact_id == message.to_id;
@@ -89,33 +55,23 @@
                 conversation.last_time = message.created_at;
 
                 if (this.selectedConversation.contact_id == message.from_id || this.selectedConversation.contact_id == message.to_id) {                   
-                this.messages.push(message);
+                this.$store.commit('addMessage', message);
                 }                
-            },            
-            getConversations() {
-                axios.get('api/conversations')
-                .then((response) => {
-                    this.conversations = response.data;
-                });
             },
             changeStatus(user, status) {                
-                const index = this.conversations.findIndex((conversation) => {
+                const index = this.$store.state.conversations.findIndex((conversation) => {
                     return conversation.contact_id == user.id;
                 });
                 if (index >= 0)
-                    this.$set(this.conversations[index], 'online', status);
+                    this.$set(this.$store.state.conversations[index], 'online', status);
             }
         },
         computed: {
+            selectedConversation() {
+                return this.$store.state.selectedConversation;
+            },
             myImageUrl() {
                 return `users/${this.user.image}`;
-            },
-            conversationsFiltered() {
-                return this.conversations.filter(
-                    (conversation) => conversation.contact_name
-                        .toLowerCase()
-                        .includes(this.querySearch.toLowerCase())
-                );
             }
         }
     }
